@@ -1,7 +1,6 @@
 import { defineConfig } from "astro/config";
 
 export default defineConfig({
-  site: "https://juleshaggard.github.io",
-  base: "/DaRozaDynasty",
+  site: "https://darozadynasty.com",
   trailingSlash: "always",
 });
