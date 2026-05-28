@@ -9,8 +9,38 @@ $(function() {
   slippySlider();
   relationTitle();
   relationGrid();
-  scrolled();
+  if (typeof scrolled === 'function') {
+    scrolled();
+  }
 });
+
+function darozaBase() {
+  return (window.__DAROZA_BASE__ || '').replace(/\/$/, '');
+}
+
+function darozaAsset(path) {
+  return darozaBase() + path;
+}
+
+function darozaPath(path) {
+  if (!path || /^(https?:)?\/\//.test(path)) {
+    return path;
+  }
+
+  if (path.charAt(0) === '/') {
+    return path;
+  }
+
+  return darozaAsset('/' + path);
+}
+
+function darozaSlugFromHref(href) {
+  var anchor = document.createElement('a');
+  anchor.href = href;
+
+  var parts = anchor.pathname.split('/').filter(Boolean);
+  return parts[parts.length - 1] || '';
+}
 
 function navStuff() {
   var $nav = $('header nav'),
@@ -34,11 +64,11 @@ function linkCard() {
 
   $('.family-link').each(function() {
     var $this = $(this),
-        $hyphenName = $this.attr('href').slice(1),
+        $hyphenName = darozaSlugFromHref($this.attr('href')),
         $splitName = $hyphenName.split('-'),
         $relationship = $this.data('relationship'),
         $currPageName = $('.title h2').text().split(' '),
-        $thumbUrl = '/assets/img/card-thumbs/'+ $hyphenName +'.jpg',
+        $thumbUrl = darozaAsset('/assets/img/card-thumbs/'+ $hyphenName +'.jpg'),
         $template = '<div class="name-card-wrap">' +
           '<div class="card-avatar" style="background-image: url('+ $thumbUrl +')">' +
             '<div class="card-fade"></div>' +
@@ -82,23 +112,23 @@ function slippySlider() {
       
       $textContainer = $('.text-container'),
       $quote = $('.quote'),
-      $cta = $('.cta')
-      
-      randImageIndex = Math.floor(Math.random()*$sliderImages.length),
+      $cta = $('.cta');
+
+  if (!$sliderImages.length) {
+    return;
+  }
+
+  var randImageIndex = Math.floor(Math.random()*$sliderImages.length),
       $randImg = $sliderImages.eq(randImageIndex);
       
   
   // Pre-fetch the big background images
   // <link rel="prefetch" href="http://daker.me/assets/images/avatar.png" />
   
-  var thisUrl = location.protocol+'//'+location.hostname+location.pathname.slice(0, -10);
   $sliderImages.each(function() {
     var $this = $(this);
-    $('head').append('<link rel="prefetch" href="' + thisUrl + '/' + $this.data('bg-image') + '" />');  
+    $('head').append('<link rel="prefetch" href="' + darozaPath($this.data('bg-image')) + '" />');
   });
-  
-  
-      console.log(thisUrl);
   
   
   // choose a rando image, make it the 'present' put the ones before it the 'past' and after the 'future'
@@ -109,7 +139,7 @@ function slippySlider() {
   function content() {
     var $present = $('.present'),
         url = $present.data('url'),
-        bgImage = $present.data('bg-image'),
+        bgImage = darozaPath($present.data('bg-image')),
         quote = $present.data('quote'),
         cta = $present.data('cta');
     
@@ -145,10 +175,14 @@ function slippySlider() {
   
   
   
-  $('.icon-arrow-left, .icon-arrow-right').click(function() {
+  $('.icon-arrow-left, .icon-arrow-right').click(function(event) {
     event.preventDefault();
     var $present = $('.present'),
         $thisArrow = $(this);
+
+    if ($thisArrow.hasClass('inactive')) {
+      return;
+    }
     
     if ($thisArrow.hasClass('icon-arrow-right')) {
       $present.removeClass('present').addClass('past').next().addClass('present').removeClass('future');
@@ -183,11 +217,11 @@ function relationGrid() {
   $('.new-relatives-grid a').each(function() {
     
     var $this = $(this),
-        $hyphenName = $this.attr('href').slice(1),
+        $hyphenName = darozaSlugFromHref($this.attr('href')),
         $splitName = $hyphenName.split('-'),
         $relationship = $this.data('relationship'),
         $currPageName = $('.title h2').text().split(' '),
-        $thumbUrl = '/assets/img/card-thumbs/'+ $hyphenName +'.jpg',
+        $thumbUrl = darozaAsset('/assets/img/card-thumbs/'+ $hyphenName +'.jpg'),
         $template = '<div class="name-card-wrap">' +
           '<div class="card-avatar" style="background-image: url('+ $thumbUrl +')">' +
             '<div class="card-fade"></div>' +
@@ -208,8 +242,6 @@ function relationGrid() {
 
 var is_touch_device = 'ontouchstart' in document.documentElement;
 if(is_touch_device) $('html').addClass('touch');
-
-
 
 
 

@@ -1,0 +1,12 @@
+---
+import { homePage } from "../data/legacyPages";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { parseLegacyPage, rewriteLegacyHtml } from "../lib/legacyHtml";
+
+const { frontmatter, body } = parseLegacyPage(homePage.raw);
+const html = rewriteLegacyHtml(body);
+---
+
+<BaseLayout title={frontmatter.title} home={frontmatter.home === true} type={frontmatter.type}>
+  <Fragment set:html={html} />
+</BaseLayout>

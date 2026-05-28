@@ -1,16 +1,21 @@
-De Rosa
-======
+# DaRozaDynasty
 
 A Study of Family by Jonathan Haggard
 
+This is the Astro migration of the original Jekyll/GitHub Pages family-history site.
 
-### Development Workflow
+## Development
 
-1. **Git** - 
-As this site is a hosted by github as a page, it is important to keep our work on the gh-pages branch. I need to think about it a bit more, but there bay be a workflow where we are pushing work to master, and then deploying to gh-pages, but for now, lets just push to gh-pages and know that they are live.
+```sh
+npm install
+npm run dev
+```
 
-2. **Jekyll** - 
-We dont use .kit anymore, we are running on jekyll.
+## Build
 
-3. **Assets** - 
-Jon, you said you had some ideas about how you want to organize the site, let's circle back on that.
+```sh
+npm run build
+npm run preview
+```
+
+The site is configured for GitHub Pages at `https://juleshaggard.github.io/DaRozaDynasty/`.

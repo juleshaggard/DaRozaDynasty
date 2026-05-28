@@ -54,3 +54,11 @@ gh-pages/
 site/_site/
 coverage
 .ruby-version
+
+# Astro / Node #
+################
+dist/
+node_modules/
+.astro/
+.env
+.env.*
